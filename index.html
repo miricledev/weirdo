@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEIRDO | Streetwear for Misfits</title>
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        @font-face {
+            font-family: 'Weird';
+            src: url('https://fonts.cdnfonts.com/css/permanent-marker') format('woff2');
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f7f7f7;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        /* CUSTOM CURSOR */
+        .cursor {
+            width: 200px;
+            height: 200px;
+            background-image: url('images/cursor.png');
+            background-size: contain;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-45%, -25%);
+            transition: transform 0.1s ease;
+        }
+
+        /* Hide default cursor */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        /* Add larger hitbox for clickable elements */
+        a, button, input, .product-card, .nav-link, .cart-icon {
+            position: relative;
+        }
+
+        a::before, button::before, input::before, .product-card::before, .nav-link::before, .cart-icon::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            z-index: 1;
+        }
+
+        /* NAVIGATION */
+        .nav-container {
+            position: fixed;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FF5733;
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(-2deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            font-size: 18px;
+            text-decoration: none;
+            color: #333;
+            position: relative;
+            padding: 5px 0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FF5733, #33FFBD);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #FF5733;
+            transform: scale(1.05) rotate(1deg);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .cart-icon {
+            font-size: 24px;
+            color: #333;
+            cursor: none;
+            transition: all 0.3s ease;
+        }
+
+        .cart-icon:hover {
+            color: #FF5733;
+            transform: scale(1.2);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            background-color: #FF5733;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3;
+            animation: pulsate 10s infinite alternate;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .hero-logo {
+            width: 300px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(5px 5px 0 rgba(0, 0, 0, 0.5));
+            animation: wiggle 6s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 3px 3px 0 #000;
+            animation: glitch 5s infinite;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: white;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-btn {
+            padding: 12px 30px;
+            background-color: white;
+            color: #FF5733;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: all 0.5s;
+        }
+
+        .hero-btn:hover {
+            transform: scale(1.05) skewX(-5deg);
+            color: #000;
+        }
+
+        .hero-btn:hover::before {
+            left: 100%;
+        }
+
+        /* FEATURED PRODUCTS */
+        .featured {
+            padding: 80px 40px;
+            background-color: #f7f7f7;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #333;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 5;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, #FF5733, #33FFBD);
+            z-index: -1;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .product-card {
+            background-color: white;
+            border: 2px solid #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.3s ease;
+            transform: rotate(0deg);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .product-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #FF5733;
+            margin-bottom: 10px;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .product-btn {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .product-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+
+        .product-btn:hover {
+            background-color: #FF5733;
+            transform: skewX(-5deg) scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 87, 51, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .product-btn:hover::before {
+            left: 100%;
+        }
+
+        .product-btn:active {
+            transform: skewX(-5deg) scale(0.95);
+        }
+
+        .bg-squiggle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/squiggle-bg.png');
+            background-size: 400px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        /* COMMUNITY SECTION */
+        .community {
+            padding: 80px 0 80px 40px;
+            background-color: #FF5733;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .community-title {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: white;
+            padding-left: 20px;
+            font-weight: bold;
+        }
+
+        .community-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 20px;
+        }
+
+        .community-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .community-item {
+            min-width: 300px;
+            background-color: white;
+            padding: 10px;
+            border: 2px solid #333;
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .community-item:hover {
+            transform: translateY(-10px) rotate(1deg);
+        }
+
+        .community-img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 1px solid #333;
+        }
+
+        .community-name {
+            font-size: 1rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .community-location {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .scroll-text {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            background-color: white;
+            color: #FF5733;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .scroll-text-inner {
+            display: inline-block;
+            animation: scrollText 20s linear infinite;
+            padding-right: 20px;
+        }
+
+        /* NEWSLETTER SECTION */
+        .newsletter {
+            padding: 80px 40px;
+            background-color: #333;
+            color: white;
+            position: relative;
+        }
+
+        .newsletter-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .newsletter-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .newsletter-desc {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .newsletter-input {
+            flex-grow: 1;
+            padding: 15px;
+            border: 2px solid white;
+            background-color: transparent;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .newsletter-btn {
+            padding: 15px 30px;
+            background-color: #FF5733;
+            color: white;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-btn:hover {
+            background-color: white;
+            color: #FF5733;
+        }
+
+        .stickers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .sticker {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: rotate(var(--rotation));
+        }
+
+        .sticker:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            --rotation: 15deg;
+            background-image: url('images/sticker1.png');
+        }
+
+        .sticker:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            --rotation: -10deg;
+            background-image: url('images/sticker2.png');
+        }
+
+        .sticker:nth-child(3) {
+            bottom: 15%;
+            left: 20%;
+            --rotation: 5deg;
+            background-image: url('images/sticker3.png');
+        }
+
+        .sticker:nth-child(4) {
+            bottom: 25%;
+            right: 10%;
+            --rotation: -20deg;
+            background-image: url('images/sticker4.png');
+        }
+
+        /* FOOTER */
+        .footer {
+            padding: 40px;
+            background-color: #1a1a1a;
+            color: white;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #FF5733;
+            transform: skewX(-5deg);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: #FF5733;
+            transform: scale(1.1);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .developer-credit {
+            font-size: 1rem;
+            color: #FF5733;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .developer-credit a {
+            color: #FF5733;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .developer-credit a:hover {
+            color: #33FFBD;
+            transform: skewX(-5deg);
+            display: inline-block;
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulsate {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes wiggle {
+            0%, 100% {
+                transform: rotate(-1deg);
+            }
+            50% {
+                transform: rotate(1deg);
+            }
+        }
+
+        @keyframes glitch {
+            0%, 100% {
+                text-shadow: 3px 3px 0 #000;
+                transform: translate(0);
+            }
+            33% {
+                text-shadow: -3px -3px 0 #0ff, 3px 3px 0 #f0f;
+                transform: translate(1px, 1px);
+            }
+            66% {
+                text-shadow: 3px -3px 0 #ff0, -3px 3px 0 #00f;
+                transform: translate(-1px, -1px);
+            }
+        }
+
+        @keyframes scrollText {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        /* Sale Banner Styles */
+        .sale-banner {
+            width: 100%;
+            padding: 12px 0;
+            background: linear-gradient(90deg, #FF5733, #FF8C33, #FF5733);
+            color: white;
+            font-weight: bold;
+            overflow: hidden;
+            z-index: 99;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sale-text-inner {
+            display: inline-block;
+            animation: scrollText 15s linear infinite;
+            white-space: nowrap;
+            padding-right: 20px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Sale Banner -->
+    <div class="sale-banner">
+        <div class="sale-text-inner">
+            SALE SALE SALE • USE CODE WEIRDO50 FOR 50% OFF • LIMITED TIME ONLY • SALE SALE SALE • USE CODE WEIRDO50 FOR 50% OFF • LIMITED TIME ONLY • SALE SALE SALE • USE CODE WEIRDO50 FOR 50% OFF • LIMITED TIME ONLY
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <a href="#" class="logo">WEIRDO</a>
+        <div class="nav-links">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">Shop</a>
+            <a href="#" class="nav-link">Lookbook</a>
+            <a href="#" class="nav-link">Weirdos</a>
+            <a href="#" class="nav-link">Contact</a>
+        </div>
+        <a href="#" class="cart-icon">👜</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <img src="images/weirdo-logo.png" alt="Weirdo Logo" class="hero-logo">
+            <h1 class="hero-title">BE WEIRD. BE YOU.</h1>
+            <p class="hero-subtitle">Streetwear for those who refuse to blend in. Crafted for self-expression, not fitting in.</p>
+            <a href="#" class="hero-btn">SHOP NOW</a>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured">
+        <div class="bg-squiggle"></div>
+        <h2 class="section-title">FRESH WEIRDNESS</h2>
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <img src="images/product1.jpg" alt="Alien Joggers" class="product-img">
+                <h3 class="product-name">ALIEN JOGGERS</h3>
+                <p class="product-price">$69.99</p>
+                <p class="product-desc">Not from this planet. These joggers will make you look like you just stepped out of a UFO. Extra-terrestrial comfort.</p>
+                <button class="product-btn">ADD TO CART</button>
+            </div>
+            
+            <!-- Product 2 -->
+            <div class="product-card">
+                <img src="images/product2.jpg" alt="Drama Beanie" class="product-img">
+                <h3 class="product-name">DRAMA BEANIE</h3>
+                <p class="product-price">$32.99</p>
+                <p class="product-desc">For when you're feeling extra. This beanie comes with built-in attitude and a side of chaos.</p>
+                <button class="product-btn">ADD TO CART</button>
+            </div>
+            
+            <!-- Product 3 -->
+            <div class="product-card">
+                <img src="images/product3.jpg" alt="Meltdown Tee" class="product-img">
+                <h3 class="product-name">MELTDOWN TEE</h3>
+                <p class="product-price">$45.99</p>
+                <p class="product-desc">Your brain on weirdness. This tee makes it look like your thoughts are dripping out of your head. In a good way.</p>
+                <button class="product-btn">ADD TO CART</button>
+            </div>
+            
+            <!-- Product 4 -->
+            <div class="product-card">
+                <img src="images/product4.jpg" alt="Glitch Hoodie" class="product-img">
+                <h3 class="product-name">GLITCH HOODIE</h3>
+                <p class="product-price">$89.99</p>
+                <p class="product-desc">Reality is just a simulation. Break the matrix with this digital malfunction-inspired hoodie. System error: too much style.</p>
+                <button class="product-btn">ADD TO CART</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="community">
+        <h2 class="community-title">THE WEIRDOS</h2>
+        <div class="community-scroll">
+            <!-- Community Member 1 -->
+            <div class="community-item">
+                <img src="images/community1.jpg" alt="Community Member" class="community-img">
+                <h3 class="community-name">@weirdkid_98</h3>
+                <p class="community-location">Tokyo, Japan</p>
+            </div>
+            
+            <!-- Community Member 2 -->
+            <div class="community-item">
+                <img src="images/community2.jpg" alt="Community Member" class="community-img">
+                <h3 class="community-name">@strange_vibez</h3>
+                <p class="community-location">Berlin, Germany</p>
+            </div>
+            
+            <!-- Community Member 3 -->
+            <div class="community-item">
+                <img src="images/community3.jpg" alt="Community Member" class="community-img">
+                <h3 class="community-name">@oddball_emma</h3>
+                <p class="community-location">London, UK</p>
+            </div>
+            
+            <!-- Community Member 4 -->
+            <div class="community-item">
+                <img src="images/community4.jpg" alt="Community Member" class="community-img">
+                <h3 class="community-name">@freaky_fashion</h3>
+                <p class="community-location">NYC, USA</p>
+            </div>
+            
+            <!-- Community Member 5 -->
+            <div class="community-item">
+                <img src="images/community5.jpg" alt="Community Member" class="community-img">
+                <h3 class="community-name">@bizarre_boy</h3>
+                <p class="community-location">Melbourne, Australia</p>
+            </div>
+            
+            <!-- Community Member 6 -->
+            <div class="community-item">
+                <img src="images/community6.jpg" alt="Community Member" class="community-img">
+                <h3 class="community-name">@quirky_queen</h3>
+                <p class="community-location">Paris, France</p>
+            </div>
+        </div>
+        <div class="scroll-text">
+            <div class="scroll-text-inner">
+                JOIN THE WEIRD SIDE • BE PART OF THE COMMUNITY • TAG US @WEIRDO • JOIN THE WEIRD SIDE • BE PART OF THE COMMUNITY • TAG US @WEIRDO • JOIN THE WEIRD SIDE • BE PART OF THE COMMUNITY • TAG US @WEIRDO
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="stickers">
+            <div class="sticker"></div>
+            <div class="sticker"></div>
+            <div class="sticker"></div>
+            <div class="sticker"></div>
+        </div>
+        <div class="newsletter-content">
+            <h2 class="newsletter-title">JOIN THE WEIRDO FAM</h2>
+            <p class="newsletter-desc">Get weird updates, exclusive drops, and borderline concerning content straight to your inbox.</p>
+            <form class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="Your email address">
+                <button type="submit" class="newsletter-btn">SUBSCRIBE</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#" class="footer-link">About Us</a>
+            <a href="#" class="footer-link">FAQs</a>
+            <a href="#" class="footer-link">Shipping</a>
+            <a href="#" class="footer-link">Returns</a>
+            <a href="#" class="footer-link">Contact</a>
+        </div>
+        <div class="social-links">
+            <a href="#" class="social-link">📷</a>
+            <a href="#" class="social-link">🐦</a>
+            <a href="#" class="social-link">📱</a>
+            <a href="#" class="social-link">🎬</a>
+        </div>
+        <p class="copyright">© 2025 WEIRDO. All Rights Weirdly Reserved.</p>
+        <p class="developer-credit">Developed by <a href="https://miricledev.github.io/md-landing-page/" target="_blank">miricledev</a></p>
+    </footer>
+
+    <script>
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        
+        document.addEventListener('mousedown', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        });
+        
+        document.addEventListener('mouseup', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+        
+        // Product cards random rotation on load
+        const productCards = document.querySelectorAll('.product-card');
+        productCards.forEach(card => {
+            const randomRotation = Math.random() * 4 - 2; // Random rotation between -2 and 2 degrees
+            card.style.transform = `rotate(${randomRotation}deg)`;
+        });
+        
+        // Navbar animation on scroll
+        const nav = document.querySelector('.nav-container');
+        let lastScrollTop = 0;
+        
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop) {
+                // Scrolling down
+                nav.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up
+                nav.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            
+            // Change navbar background based on scroll position
+            if (scrollTop > 100) {
+                nav.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            } else {
+                nav.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+            }
+        });
+        
+        // Random movement for stickers
+        const stickers = document.querySelectorAll('.sticker');
+        
+        stickers.forEach(sticker => {
+            setInterval(() => {
+                const randomX = Math.random() * 10 - 5;
+                const randomY = Math.random() * 10 - 5;
+                const randomRotate = Math.random() * 10 - 5;
+                
+                sticker.style.transform = `translate(${randomX}px, ${randomY}px) rotate(calc(var(--rotation) + ${randomRotate}deg))`;
+            }, 2000 + Math.random() * 1000);
+        });
+        
+        // Distortion effect on hero title
+        const heroTitle = document.querySelector('.hero-title');
+        
+        setInterval(() => {
+            if (Math.random() > 0.9) { // 10% chance of glitching
+                heroTitle.style.textShadow = `-3px -3px 0 #0ff, 3px 3px 0 #f0f`;
+                heroTitle.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
+                
+                setTimeout(() => {
+                    heroTitle.style.textShadow = '3px 3px 0 #000';
+                    heroTitle.style.transform = 'translate(0)';
+                }, 100);
+            }
+        }, 500);
+    </script>
+</body>
+</html>
